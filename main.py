@@ -36,10 +36,12 @@ def get_output_layers(net):
     """
     try:
         layer_names = net.getLayerNames()
-        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+        unConnectedOutLayer = net.getUnconnectedOutLayers()
+        output_layers = [layer_names[i - 1] for i in unConnectedOutLayer]
         return output_layers
-    except:
-        print("Can't get output layers")
+    except Exception as e:
+        print(e)
+        raise Exception("Can't get output layers")
         return None
 
 
@@ -80,7 +82,8 @@ def detections_yolo3(net, image, confidence_setting, yolo_w, yolo_h, frame_w, fr
                 y = center_y - h / 2
                 class_ids.append(class_id)
                 confidences.append(float(confidence))
-                boxes.append([x, y, w, h])
+                # boxes.append([x, y, w, h])
+                boxes.append([int(x), int(y), int(w), int(h)])
     return boxes, class_ids, confidences
 
 
